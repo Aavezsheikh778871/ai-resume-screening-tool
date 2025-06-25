@@ -1,0 +1,4 @@
+Resume Name,Match Score,Matched Keywords
+sample.pdf,68.36,"['team', 'field', 'efficiency', 'engineering', 'work', 'system', 'science', 'develop', 'engine', 'scientist', 'working', 'project', 'ml', 'c', 'platform', 'vadodara', 'python', 'skill', 'tool', 'data']"
+sample2.pdf,69.84,"['churn', 'customer', 'analysis', 'company', 'statistical', 'engineering', 'work', 'science', 'develop', 'engine', 'scientist', 'xgboost', 'project', 'ml', 'c', 'python', 'model', 'india', 'tensorflow', 'eg', 'feature', 'sql', 'tuning', 'hypothesis', 'framework', 'using', 'statistic', 'skill', 'visualization', 'strong', 'regression', 'data']"
+sample3.pdf,71.71,"['customer', 'engineering', 'work', 'science', 'develop', 'engine', 'scientist', 'xgboost', 'project', 'ml', 'junior', 'c', 'business', 'python', 'model', 'india', 'eg', 'feature', 'clean', 'hypothesis', 'framework', 'design', 'using', 'pipeline', 'statistic', 'experience', 'skill', 'testing', 'ab', 'regression', 'data']"

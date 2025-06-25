@@ -1,0 +1,48 @@
+Job Title: Data Scientist
+Location: Vadodara, India
+Reports to: Head of Data Science / Analytics
+
+Role Overview:
+As a Data Scientist, you’ll drive data‑based insights to influence strategic decisions. You’ll design and implement ML models, work cross‑functionally with product, engineering, and business teams, and translate analytics into action.
+
+✅ Key Responsibilities
+
+Develop end-to-end predictive models using Python/R and libraries (e.g., scikit‑learn, TensorFlow, PyTorch).
+
+Clean, aggregate, and analyze large structured and unstructured datasets.
+
+Feature engineering and model selection with performance tuning.
+
+Validate results; translate findings into dashboards and actionable recommendations.
+
+Collaborate with stakeholders to assess business needs and impact.
+
+Mentor junior analysts and maintain model documentation.
+
+🛠 Required Qualifications
+Bachelor’s degree (Master’s preferred) in CS, Statistics, Math, or related field.
+
+2+ years experience in data science or ML roles.
+
+Proficient in Python, SQL, and ML frameworks (scikit‑learn, XGBoost, TensorFlow).
+
+Strong statistical analysis skills: regression, classification, hypothesis testing.
+
+Experience deploying models and working with production systems.
+
+✅ Preferred Skills
+Big Data tools: Spark, Hadoop.
+
+Cloud platforms (AWS/GCP/Azure).
+
+Data visualization: Tableau, PowerBI, Plotly.
+
+Experience with A/B testing and experimentation frameworks.
+
+🎯 Project Examples
+Predictive models for customer churn, recommendation engines, or pricing optimization.
+
+Big data pipelines supporting real‑time analytics and ML operations.
+
+📈 Why the Role Matters
+Your models and insights will power key business decisions—driving product improvements, operational efficiencies, and impactful strategies across the company.
