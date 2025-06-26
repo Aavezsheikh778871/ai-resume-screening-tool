@@ -1,80 +1,65 @@
-import tkinter as tk
-from tkinter import filedialog, messagebox
+import streamlit as st
+import pandas as pd
 import os
 from pdf_reader import extract_text_from_pdf
 from resume_matcher import match_resumes
-import pandas as pd
+from skill_gap_analysis import analyze_skill_gap
+import plotly.express as px
 
-class ResumeMatcherApp:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("AI Resume Matcher")
-        self.root.geometry("500x400")
+st.set_page_config(page_title="AI Resume Screening Tool", layout="centered")
 
-        self.resume_folder = "resumes"  # Automatically use 'resumes' folder
-        self.job_description_path = None
+st.title("🤖 AI Resume Screening Tool")
+st.markdown("Upload a **Job Description** and scan resumes from the `resumes/` folder.")
 
-        tk.Label(root, text="📁 Using Default Resume Folder: 'resumes'", fg="green").pack(pady=10)
+# Load job description
+jd_file = st.file_uploader("📄 Upload Job Description (.txt file)", type=["txt"])
+resume_folder = "resumes"
 
-        tk.Button(root, text="📝 Load Job Description", command=self.load_job_description).pack(pady=10)
-        tk.Button(root, text="⚙️ Match Resumes", command=self.run_matching).pack(pady=10)
+if jd_file is not None:
+    job_description = jd_file.read().decode("utf-8")
 
-        self.result_text = tk.Text(root, height=15, width=60)
-        self.result_text.pack(pady=10)
+    if st.button("🚀 Match Resumes"):
+        if not os.path.exists(resume_folder):
+            st.error(f"❌ Resume folder '{resume_folder}' not found!")
+        else:
+            resume_texts = []
+            resume_names = []
 
-    def load_job_description(self):
-        path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt")])
-        if path:
-            self.job_description_path = path
-            messagebox.showinfo("Success", "Job description loaded!")
+            for filename in os.listdir(resume_folder):
+                if filename.endswith(".pdf"):
+                    text = extract_text_from_pdf(os.path.join(resume_folder, filename))
+                    resume_texts.append(text)
+                    resume_names.append(filename)
 
-    def run_matching(self):
-        if not self.job_description_path:
-            messagebox.showerror("Error", "Please load a job description first.")
-            return
+            results = match_resumes(job_description, resume_texts, resume_names)
 
-        if not os.path.exists(self.resume_folder):
-            messagebox.showerror("Error", f"Resume folder '{self.resume_folder}' does not exist.")
-            return
+            # Save full results
+            df = pd.DataFrame(results, columns=["Resume Name", "Match Score", "Matched Keywords"])
+            df.to_csv("results.csv", index=False)
 
-        with open(self.job_description_path, 'r', encoding='utf-8') as f:
-            job_description = f.read()
+            # Top 3
+            sorted_results = sorted(results, key=lambda x: x[1], reverse=True)
+            top_3 = sorted_results[:3]
+            pd.DataFrame(top_3, columns=["Resume Name", "Match Score", "Matched Keywords"]).to_csv("top_3_shortlisted.csv", index=False)
 
-        resume_texts = []
-        resume_names = []
+            st.success("✅ Matching complete! Results saved.")
 
-        for filename in os.listdir(self.resume_folder):
-            if filename.endswith('.pdf'):
-                path = os.path.join(self.resume_folder, filename)
-                text = extract_text_from_pdf(path)
-                resume_texts.append(text)
-                resume_names.append(filename)
+            # 📊 Show results
+            st.subheader("📊 Resume Matching Results")
+            st.dataframe(df)
 
-        results = match_resumes(job_description, resume_texts, resume_names)
+            # 📈 Visual Scoring Dashboard
+            st.subheader("📈 Visual Scoring Dashboard")
+            fig = px.bar(df.sort_values("Match Score", ascending=False), x="Resume Name", y="Match Score",
+                         color="Match Score", text="Match Score", color_continuous_scale="Blues")
+            fig.update_layout(height=400)
+            st.plotly_chart(fig)
 
-        # Save all results
-        df = pd.DataFrame(results, columns=["Resume Name", "Match Score", "Matched Keywords"])
-        df.to_csv("results.csv", index=False)
+            # 🏆 Show Top 3
+            st.subheader("🏆 Top 3 Shortlisted")
+            for name, score, keywords in top_3:
+                st.markdown(f"**{name}** — Score: `{score:.2f}`")
+                st.caption(f"Matched Skills: {', '.join(keywords)}")
 
-        # Save top 3
-        sorted_results = sorted(results, key=lambda x: x[1], reverse=True)
-        top_3 = sorted_results[:3]
-        pd.DataFrame(top_3, columns=["Resume Name", "Match Score", "Matched Keywords"]).to_csv("top_3_shortlisted.csv", index=False)
-
-        # Show results in GUI
-        self.result_text.delete("1.0", tk.END)
-        self.result_text.insert(tk.END, "📊 Matching Results:\n\n")
-        for name, score, keywords in results:
-            self.result_text.insert(tk.END, f"{name}: {score:.2f} | Keywords: {', '.join(keywords)}\n")
-
-        self.result_text.insert(tk.END, "\n🏆 Top 3 Shortlisted:\n\n")
-        for name, score, keywords in top_3:
-            self.result_text.insert(tk.END, f"{name}: {score:.2f} | Keywords: {', '.join(keywords)}\n")
-
-        messagebox.showinfo("Done", "Matching complete! Results saved to 'results.csv' and 'top_3_shortlisted.csv'.")
-
-# Run the app
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = ResumeMatcherApp(root)
-    root.mainloop()
+else:
+    st.warning("👆 Upload a job description file to begin.")

@@ -87,3 +87,37 @@ if resume_texts:
 
 else:
     st.warning("⚠️ No PDF resumes found in the 'resumes' folder. Please add resumes and reload.")
+
+# 📊 Skill Gap Radar Chart
+st.subheader("🕸️ Skill Gap Radar Chart")
+
+from skill_gap_analysis import get_skill_distribution
+
+# Combine resumes and job description
+texts = [job_description] + resume_texts
+labels = ["Job Description"] + resume_names
+
+skill_df = get_skill_distribution(texts, labels)
+
+import plotly.graph_objects as go
+
+categories = skill_df.columns
+
+fig_radar = go.Figure()
+
+for label in skill_df.index:
+    fig_radar.add_trace(go.Scatterpolar(
+        r=skill_df.loc[label].values,
+        theta=categories,
+        fill='toself',
+        name=label
+    ))
+
+fig_radar.update_layout(
+    polar=dict(
+        radialaxis=dict(visible=True)
+    ),
+    showlegend=True
+)
+
+st.plotly_chart(fig_radar)
