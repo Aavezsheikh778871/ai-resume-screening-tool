@@ -6,3 +6,4 @@ matplotlib
 seaborn
 wordcloud
 plotly
+sentence-transformers
